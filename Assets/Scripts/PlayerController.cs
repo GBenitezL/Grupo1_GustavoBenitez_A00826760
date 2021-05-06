@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     float horizontal;
     float speed = 8.0f;
     public Text scoreboard;
-    int score;
+    int score = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -35,15 +35,19 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.tag == "Rock")
         {
             score++;
-            Destroy(collision.gameObject);
         }
+        else if (collision.gameObject.tag == "Meteorite") {
+            speed = speed * 0.5f;
+            StartCoroutine(SpeedUp());
+        }
+
         else if (collision.gameObject.tag == "Power")
         {
             transform.localScale = new Vector3(4, 1, 1);
             speed = speed * 1.5f;
             StartCoroutine(ShrinkPlayer());
-            Destroy(collision.gameObject);
         }
+        Destroy(collision.gameObject);
         scoreboard.text = score.ToString();
     }
 
@@ -51,6 +55,11 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(6);
         transform.localScale = new Vector3(2, 1, 1);
-        speed = speed / 3;
+        speed = speed / 1.5f;
+    }
+    IEnumerator SpeedUp()
+    {
+        yield return new WaitForSeconds(5);
+        speed = speed / 0.5f;
     }
 }
